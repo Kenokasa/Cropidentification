@@ -13,3 +13,4 @@ logic/__pycache__/views.cpython-313.pyc
 logic/migrations/__pycache__/__init__.cpython-313.pyc
 logic/migrations/__pycache__/0001_initial.cpython-313.pyc
 logic/migrations/0001_initial.py
+logic/.env

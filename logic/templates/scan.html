@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block content %}
 
 <!-- Alpine.js -->
@@ -56,6 +57,21 @@
     </div>
 </div>
 
+<!-- CSRF setup for JavaScript -->
+<script>
+    function getCSRFToken() {
+        const name = 'csrftoken';
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const c = cookie.trim();
+            if (c.startsWith(name + '=')) {
+                return decodeURIComponent(c.substring(name.length + 1));
+            }
+        }
+        return '';
+    }
+</script>
+
 <script>
 function detectionApp() {
     return {
@@ -98,44 +114,37 @@ function detectionApp() {
         },
 
         async sendToServer(file) {
-            const toBase64 = file => new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.readAsDataURL(file);
-                reader.onload = () => resolve(reader.result);
-                reader.onerror = error => reject(error);
-            });
+            const formData = new FormData();
+            formData.append("image", file);
 
             try {
-                const base64Image = await toBase64(file);
-
-                const response = await fetch("https://jarif-crop-disease-identification.hf.space/run/predict", {
+                const response = await fetch("{% url 'predict_with_hf_model' %}", {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json"
+                        'X-CSRFToken': getCSRFToken()
                     },
-                    body: JSON.stringify({ data: [base64Image] })
+                    body: formData
                 });
 
-                const result = await response.json();
+                const data = await response.json();
 
-                if (response.ok && result.data?.[0]?.confidences) {
-                    const label = result.data[0].label;
-                    const confidences = result.data[0].confidences;
+                if (response.ok && Array.isArray(data.result)) {
+                    const top = data.result[0];
 
                     this.prediction = `
-                        <strong class="text-green-300 text-lg">🌿 Top Match: ${label}</strong><br>
+                        <strong class="text-green-300 text-lg">🌿 Top Match: ${top.label}</strong><br>
                         <ul class="mt-2 list-disc list-inside text-blue-200">
-                            ${confidences.map(c =>
-                                `<li>${c.label}: <span class="font-semibold">${(c.confidence * 100).toFixed(1)}%</span></li>`
+                            ${data.result.map(c =>
+                                `<li>${c.label}: <span class="font-semibold">${(c.score * 100).toFixed(1)}%</span></li>`
                             ).join('')}
                         </ul>
                     `;
                 } else {
-                    this.prediction = `<span class="text-red-400">❌ Error: Unable to interpret prediction.</span>`;
+                    this.prediction = `<span class="text-red-400">❌ Error: ${data.error || 'Prediction failed.'}</span>`;
                 }
             } catch (err) {
-                this.prediction = `<span class="text-red-400">❌ Prediction failed: ${err.message}</span>`;
+                console.error(err);
+                this.prediction = `<span class="text-red-400">❌ Request failed: ${err.message}</span>`;
             }
         },
 
