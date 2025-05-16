@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASTU MECH | AI-Powered Mechanical Innovation</title>
+    <style>
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e40af;
+            --accent: #3b82f6;
+            --light: #e2e8f0;
+            --highlight: #f59e0b;
+            --astu-green: #2ecc71;  /* Added ASTU brand green */
+        }
+
+        body {
+            font-family: 'Orbitron', 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--primary);
+            color: var(--light);
+            background-image: radial-gradient(circle at 25% 25%, rgba(30, 64, 175, 0.15) 0%, transparent 50%);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80') no-repeat center center;
+            background-size: cover;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        h1 {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--astu-green), var(--accent)); /* Updated gradient with ASTU green */
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 20px rgba(46, 204, 113, 0.3); /* Green shadow */
+        }
+
+        .slogan {
+            font-size: 1.8rem;
+            max-width: 800px;
+            margin-bottom: 3rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .slogan::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(90deg, var(--astu-green), var(--accent)); /* Updated gradient */
+            margin: 2rem auto;
+            border-radius: 2px;
+        }
+
+        .creator {
+            font-size: 1.2rem;
+            margin-top: 4rem;
+            padding: 1rem 2rem;
+            border: 1px solid var(--astu-green); /* Green border */
+            border-radius: 50px;
+            background: rgba(46, 204, 113, 0.1); /* Green tint */
+            backdrop-filter: blur(5px);
+        }
+
+        .creator span {
+            color: var(--highlight);
+            font-weight: bold;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--astu-green), var(--secondary)); /* Green button */
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px -5px rgba(46, 204, 113, 0.4); /* Green shadow */
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px -5px rgba(46, 204, 113, 0.6); /* More green shadow */
+        }
+
+        /* Updated section title gradient */
+        .section-title {
+            background: linear-gradient(90deg, var(--astu-green), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        /* Updated card highlights */
+        .robot-name {
+            color: var(--astu-green);
+        }
+
+        /* Rest of your existing CSS remains the same */
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .robots-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .robot-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--accent);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .robot-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px -10px rgba(59, 130, 246, 0.4);
+        }
+
+        .robot-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .robot-info {
+            padding: 1.5rem;
+        }
+
+        .robot-name {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .robot-description {
+            color: var(--light);
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 4rem;
+        }
+
+        .feature-card {
+            background: rgba(30, 64, 175, 0.1);
+            padding: 2rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--astu-green); /* Green accent */
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--astu-green); /* Green title */
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            background: rgba(15, 23, 42, 0.8);
+            margin-top: 4rem;
+            border-top: 1px solid var(--astu-green); /* Green top border */
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .slogan {
+                font-size: 1.2rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="particles" id="particles-js"></div>
+
+    <section class="hero">
+        <h1>ASTU MECH</h1> <!-- Changed to ASTU MECH -->
+
+        <p class="slogan">
+            "Where Artificial Intelligence meets Precision Engineering -
+            Revolutionizing mechanical design through advanced 3D modeling
+            and machine learning algorithms that bring robotic visions to life."
+        </p>
+
+        <a href="/scan/" class="cta-button">Explore the Future</a>
+
+        <div class="creator">
+            Created by <span>Mintesinot Kasa</span> | AI & 3D Modeling Specialist
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Legendary Robots & AI Systems</h2>
+
+        <div class="robots-grid">
+            <div class="robot-card">
+                <img src="https://images.unsplash.com/photo-1593508512255-86ab42a8e620?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" alt="Boston Dynamics Atlas" class="robot-image">
+                <div class="robot-info">
+                    <h3 class="robot-name">Boston Dynamics Atlas</h3>
+                    <p class="robot-description">The most advanced humanoid robot, capable of dynamic movements and complex tasks with human-like agility.</p>
+                </div>
+            </div>
+
+            <div class="robot-card">
+                <img src="https://images.unsplash.com/photo-1620712943543-bcc4688e7485?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" alt="Industrial Robotic Arm" class="robot-image">
+                <div class="robot-info">
+                    <h3 class="robot-name">KUKA Industrial Arms</h3>
+                    <p class="robot-description">Precision manufacturing robots that revolutionized automotive assembly lines worldwide.</p>
+                </div>
+            </div>
+
+            <div class="robot-card">
+                <img src="https://images.unsplash.com/photo-1677442135136-760c813a743f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" alt="Sophia Robot" class="robot-image">
+                <div class="robot-info">
+                    <h3 class="robot-name">Sophia the Robot</h3>
+                    <p class="robot-description">The first robot citizen with human-like appearance and ability to display human-like expressions.</p>
+                </div>
+            </div>
+
+            <div class="robot-card">
+                <img src="https://images.unsplash.com/photo-1614728894747-a83421e2b9c9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" alt="Mars Rovers" class="robot-image">
+                <div class="robot-info">
+                    <h3 class="robot-name">NASA Mars Rovers</h3>
+                    <p class="robot-description">Perseverance, Curiosity, and their predecessors - robotic explorers that expanded our knowledge of Mars.</p>
+                </div>
+            </div>
+
+            <div class="robot-card">
+                <img src="https://images.unsplash.com/photo-1666214280396-24d347428f9e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" alt="OpenAI" class="robot-image">
+                <div class="robot-info">
+                    <h3 class="robot-name">OpenAI Systems</h3>
+                    <p class="robot-description">GPT-4 and DALL-E represent the cutting edge of artificial intelligence in natural language processing.</p>
+                </div>
+            </div>
+
+            <div class="robot-card">
+                <img src="https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1080&q=80" alt="Tesla Bot" class="robot-image">
+                <div class="robot-info">
+                    <h3 class="robot-name">Tesla Optimus</h3>
+                    <p class="robot-description">Tesla's humanoid robot designed to perform dangerous, repetitive, or boring tasks.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">Our Robotic Capabilities</h2>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3 class="feature-title">AI-Powered Vision</h3>
+                <p class="robot-description">Advanced computer vision systems that enable robots to perceive and interpret their environment with human-like understanding.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">Precision 3D Modeling</h3>
+                <p class="robot-description">Cutting-edge CAD and simulation tools that allow us to prototype and test robotic systems in virtual environments.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">Machine Learning</h3>
+                <p class="robot-description">Self-improving algorithms that enable our robots to learn from experience and adapt to new situations.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3 class="feature-title">Haptic Feedback</h3>
+                <p class="robot-description">Advanced tactile sensors that provide robots with a sense of touch for delicate operations.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <h2 class="section-title">ASTU MECH Innovations</h2>
+        <div class="features">
+            <div class="feature-card">
+                <h3 class="feature-title">University-Backed Research</h3>
+                <p class="robot-description">Leveraging Adama Science and Technology University's cutting-edge research facilities and academic expertise.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="feature-title">Localized Solutions</h3>
+                <p class="robot-description">Developing robotic systems tailored for Ethiopian and African industrial and agricultural needs.</p>
+            </div>
+            <div class="feature-card">
+                <h3 class="feature-title">Student-Driven Development</h3>
+                <p class="robot-description">Harnessing the creativity and talent of ASTU's brightest engineering students.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2025 <strong>ASTU MECH</strong>. All rights reserved.</p>
+        <p>Adama Science and Technology University | Mechanical Engineering Innovation Lab</p>
+        <p>Created by <span>Mintesinot Kasa</span> - Pioneering the future of robotic intelligence</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {
+                    "value": 80,
+                    "density": {
+                        "enable": true,
+                        "value_area": 800
+                    }
+                },
+                "color": {
+                    "value": "#2ecc71"  /* Changed to ASTU green */
+                },
+                "shape": {
+                    "type": "circle",
+                    "stroke": {
+                        "width": 0,
+                        "color": "#000000"
+                    }
+                },
+                "opacity": {
+                    "value": 0.5,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 1,
+                        "opacity_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "size": {
+                    "value": 3,
+                    "random": true,
+                    "anim": {
+                        "enable": true,
+                        "speed": 2,
+                        "size_min": 0.1,
+                        "sync": false
+                    }
+                },
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#2ecc71",  /* Changed to ASTU green */
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 1,
+                    "direction": "none",
+                    "random": true,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false,
+                    "attract": {
+                        "enable": true,
+                        "rotateX": 600,
+                        "rotateY": 1200
+                    }
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {
+                        "enable": true,
+                        "mode": "grab"
+                    },
+                    "onclick": {
+                        "enable": true,
+                        "mode": "push"
+                    },
+                    "resize": true
+                },
+                "modes": {
+                    "grab": {
+                        "distance": 140,
+                        "line_linked": {
+                            "opacity": 1
+                        }
+                    },
+                    "push": {
+                        "particles_nb": 4
+                    }
+                }
+            },
+            "retina_detect": true
+        });
+    </script>
+</body>
+</html>

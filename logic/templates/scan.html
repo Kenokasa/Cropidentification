@@ -1,0 +1,157 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Alpine.js -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+<div class="hero min-h-screen bg-gradient-to-br from-gray-900 to-blue-900"
+     x-data="detectionApp()" x-init="init()">
+    <div class="hero-content flex-col">
+        <div class="text-center mb-8">
+            <h1 class="text-5xl font-bold text-white mb-4">Leaf Disease Detection</h1>
+            <p class="text-xl text-blue-200">Capture or Upload an Image to Detect Disease</p>
+        </div>
+
+        <div class="card bg-base-100 shadow-2xl w-full max-w-4xl border-2 border-blue-400">
+            <div class="card-body">
+                <!-- Webcam Feed -->
+                <div class="aspect-video bg-gray-800 rounded-lg overflow-hidden border border-blue-300 relative">
+                    <video x-ref="video" autoplay playsinline class="w-full h-full object-cover"></video>
+                </div>
+
+                <!-- File Upload -->
+                <div class="mt-4 text-white">
+                    <label class="block text-sm font-medium mb-2">Or Upload Image</label>
+                    <input type="file" accept="image/*" @change="onFileUpload"
+                           class="file-input file-input-bordered w-full" />
+                </div>
+
+                <!-- Controls -->
+                <div class="flex flex-wrap gap-4 justify-center mt-6">
+                    <button @click="captureSnapshot"
+                            class="btn btn-secondary btn-lg transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-camera mr-2"></i> Capture & Predict
+                    </button>
+                    <button @click="predictUploaded"
+                            class="btn btn-primary btn-lg transition-all duration-300 hover:scale-105">
+                        <i class="fas fa-upload mr-2"></i> Predict Uploaded
+                    </button>
+                </div>
+
+                <!-- Result -->
+                <div class="mt-8" x-show="prediction">
+                    <h3 class="text-xl font-semibold text-white mb-2">Prediction Result</h3>
+                    <div class="alert alert-info shadow-lg">
+                        <div x-html="prediction"></div>
+                    </div>
+                </div>
+
+                <!-- Snapshot Preview -->
+                <div class="mt-6" x-show="snapshot">
+                    <h3 class="text-xl font-semibold text-white mb-2">Image Preview</h3>
+                    <img :src="snapshot" class="rounded-lg border border-blue-300 max-h-64">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function detectionApp() {
+    return {
+        snapshot: null,
+        prediction: '',
+        file: null,
+
+        async init() {
+            console.log("Alpine initialized.");
+            const video = this.$refs.video;
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                video.srcObject = stream;
+            } catch (e) {
+                console.error("Webcam access denied or not available.", e);
+            }
+        },
+
+        async captureSnapshot() {
+            const video = this.$refs.video;
+            const canvas = document.createElement('canvas');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+            this.snapshot = canvas.toDataURL('image/jpeg');
+
+            const blob = await (await fetch(this.snapshot)).blob();
+            const file = new File([blob], 'snapshot.jpg', { type: 'image/jpeg' });
+
+            await this.sendToServer(file);
+        },
+
+        async predictUploaded() {
+            if (!this.file) {
+                alert("Please upload an image first.");
+                return;
+            }
+            await this.sendToServer(this.file);
+        },
+
+        async sendToServer(file) {
+            const toBase64 = file => new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = error => reject(error);
+            });
+
+            try {
+                const base64Image = await toBase64(file);
+
+                const response = await fetch("https://jarif-crop-disease-identification.hf.space/run/predict", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json"
+                    },
+                    body: JSON.stringify({ data: [base64Image] })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.data?.[0]?.confidences) {
+                    const label = result.data[0].label;
+                    const confidences = result.data[0].confidences;
+
+                    this.prediction = `
+                        <strong class="text-green-300 text-lg">🌿 Top Match: ${label}</strong><br>
+                        <ul class="mt-2 list-disc list-inside text-blue-200">
+                            ${confidences.map(c =>
+                                `<li>${c.label}: <span class="font-semibold">${(c.confidence * 100).toFixed(1)}%</span></li>`
+                            ).join('')}
+                        </ul>
+                    `;
+                } else {
+                    this.prediction = `<span class="text-red-400">❌ Error: Unable to interpret prediction.</span>`;
+                }
+            } catch (err) {
+                this.prediction = `<span class="text-red-400">❌ Prediction failed: ${err.message}</span>`;
+            }
+        },
+
+        onFileUpload(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.file = file;
+                this.snapshot = URL.createObjectURL(file);
+            }
+        }
+    };
+}
+
+document.addEventListener('alpine:init', () => {
+    Alpine.data('detectionApp', detectionApp);
+});
+</script>
+
+{% endblock %}

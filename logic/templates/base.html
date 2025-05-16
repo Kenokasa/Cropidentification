@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="garden">
+<head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>CropGuard AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@3.9.2/dist/full.css" rel="stylesheet">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+
+<body class="bg-base-100">
+
+    {% block content %}{% endblock %}
+
+    <!-- 3D Viewer Container -->
+    <div id="3d-container" class="w-full h-96 my-8"></div>
+
+</body>
+</html>
